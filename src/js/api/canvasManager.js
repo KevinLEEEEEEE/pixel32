@@ -1,6 +1,3 @@
-const _ = {
-
-};
 
 const canvasProp = {
   init() {
@@ -42,16 +39,16 @@ const canvasProp = {
     const computedSize = this.getComputedSize();
 
     return {
-      width: computedSize.width / pixelW,
-      height: computedSize.height / pixelH,
+      width: Math.floor(computedSize.width / pixelW),
+      height: Math.floor(computedSize.height / pixelH),
     };
   },
 
   draw(pos, color) { // pos:[x, y], color: [r, g, b, a];
     const x = pos[0] * this.pixelSize.width;
     const y = pos[1] * this.pixelSize.height;
-    const pixelW = Math.round(this.pixelSize.width);
-    const pixelH = Math.round(this.pixelSize.height);
+    const pixelW = this.pixelSize.width;
+    const pixelH = this.pixelSize.height;
     const formatccolor = `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`;
 
     this.context.fillStyle = formatccolor;
@@ -60,23 +57,16 @@ const canvasProp = {
   },
 
   wipe(pos) {
+    const x = pos[0] * this.pixelSize.width;
+    const y = pos[1] * this.pixelSize.height;
+    const pixelW = this.pixelSize.width;
+    const pixelH = this.pixelSize.height;
 
+    this.context.clearRect(x, y, pixelW, pixelH);
   },
 
   clear() {
-
-  },
-
-  revoke() {
-
-  },
-
-  addHistory() {
-
-  },
-
-  regressHistory() {
-
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
   },
 };
 
@@ -84,10 +74,8 @@ export default function (canvas, pixelW, pixelH) {
   const tmp = Object.create(canvasProp);
 
   tmp.canvas = canvas;
-
   tmp.context = canvas.getContext('2d');
   tmp.pixelSize = tmp.getPixelSize(pixelW, pixelH);
-  tmp.history = [];
 
   tmp.init();
 
