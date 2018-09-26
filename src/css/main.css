@@ -5,10 +5,11 @@ body {
 
 .drawBox {
   display: flex;
-  justify-content: left;
+  justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
+  margin-left: -8%;
 }
 
 
