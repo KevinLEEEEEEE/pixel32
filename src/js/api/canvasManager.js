@@ -4,10 +4,25 @@ const canvasProp = {
     const style = this.getComputedSize();
     const ratio = this.getRatio();
 
-    this.canvas.width = style.width * ratio;
-    this.canvas.height = style.height * ratio;
+    const w = this.completeLen(style.width, 32);
+    const h = this.completeLen(style.height, 32);
+
+    this.canvas.style.width = w;
+    this.canvas.style.height = h;
+
+    this.canvas.width = w * ratio;
+    this.canvas.height = h * ratio;
 
     this.context.scale(ratio, ratio);
+
+    return {
+      w,
+      h,
+    };
+  },
+
+  completeLen(len, target) {
+    return Math.ceil(len / target) * target;
   },
 
   getRatio() {
@@ -35,12 +50,10 @@ const canvasProp = {
     };
   },
 
-  getPixelSize(pixelW, pixelH) {
-    const computedSize = this.getComputedSize();
-
+  getPixelSize(pixelW, pixelH, { w, h }) {
     return {
-      width: Math.floor(computedSize.width / pixelW),
-      height: Math.floor(computedSize.height / pixelH),
+      width: w / pixelW,
+      height: h / pixelH,
     };
   },
 
@@ -49,9 +62,9 @@ const canvasProp = {
     const y = pos[1] * this.pixelSize.height;
     const pixelW = this.pixelSize.width;
     const pixelH = this.pixelSize.height;
-    const formatccolor = `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`;
+    const formatcolor = `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`;
 
-    this.context.fillStyle = formatccolor;
+    this.context.fillStyle = formatcolor;
 
     this.context.fillRect(x, y, pixelW, pixelH);
   },
@@ -75,9 +88,8 @@ export default function (canvas, pixelW, pixelH) {
 
   tmp.canvas = canvas;
   tmp.context = canvas.getContext('2d');
-  tmp.pixelSize = tmp.getPixelSize(pixelW, pixelH);
-
-  tmp.init();
+  tmp.size = tmp.init();
+  tmp.pixelSize = tmp.getPixelSize(pixelW, pixelH, tmp.size);
 
   return tmp;
 }

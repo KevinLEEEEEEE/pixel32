@@ -27,10 +27,6 @@ export default function detectLayer(contentLayer, w, h) {
       return;
     }
 
-    if (x >= w || y >= h) {
-      return;
-    }
-
     lastPos = pos;
 
     canvas.clear();
@@ -55,6 +51,7 @@ export default function detectLayer(contentLayer, w, h) {
       state = FSM.draw;
       break;
     case 2:
+      canvas.wipe(lastPos);
       contentLayer.wipe(lastPos);
       state = FSM.wipe;
       break;
